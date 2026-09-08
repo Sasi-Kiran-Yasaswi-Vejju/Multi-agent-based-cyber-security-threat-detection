@@ -1,0 +1,76 @@
+{
+  "attack_taxonomy": {
+    "DoS": {
+      "category": "Network Attack",
+      "impacted_property": "Availability",
+      "base_severity": 8,
+      "typical_indicators": [
+        "Abnormally large network packet size",
+        "UDP/ICMP flood protocol detected",
+        "High traffic burst in short duration"
+      ],
+      "mitigation_target": "Traffic filtering and ingress rate-limiting"
+    },
+    "Brute Force": {
+      "category": "Credential Attack",
+      "impacted_property": "Confidentiality",
+      "base_severity": 7,
+      "typical_indicators": [
+        "Multiple repeated failed login attempts",
+        "High login frequency from single IP",
+        "Authentication credential spraying"
+      ],
+      "mitigation_target": "Account lockout and source IP firewall drop"
+    },
+    "Port Scan": {
+      "category": "Reconnaissance",
+      "impacted_property": "Confidentiality",
+      "base_severity": 4,
+      "typical_indicators": [
+        "Rapid sequential connection attempts",
+        "Short session duration with minimal data",
+        "Probing unassigned ports"
+      ],
+      "mitigation_target": "Temporary source throttling and honeypot diversion"
+    },
+    "Generic Anomaly": {
+      "category": "Suspicious Activity",
+      "impacted_property": "Integrity",
+      "base_severity": 5,
+      "typical_indicators": [
+        "Unusual time access outside baseline",
+        "Low IP reputation score",
+        "Unencrypted protocol transmission (None/Plaintext)"
+      ],
+      "mitigation_target": "Enhanced auditing and secondary authentication challenge"
+    }
+  },
+  "severity_thresholds": [
+    {
+      "min_confidence": 0.85,
+      "base_severity_ge": 7,
+      "assigned_severity": "CRITICAL"
+    },
+    {
+      "min_confidence": 0.70,
+      "base_severity_ge": 6,
+      "assigned_severity": "HIGH"
+    },
+    {
+      "min_confidence": 0.50,
+      "base_severity_ge": 4,
+      "assigned_severity": "MEDIUM"
+    },
+    {
+      "min_confidence": 0.00,
+      "base_severity_ge": 0,
+      "assigned_severity": "LOW"
+    }
+  ],
+  "target_criticality_multipliers": {
+    "LOW_VALUE_WORKSTATION": 0.8,
+    "DMZ_WEB_SERVER": 1.0,
+    "CORE_DATABASE": 1.3,
+    "DOMAIN_CONTROLLER": 1.5
+  }
+}
