@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Agent AI Cybersecurity Threat Detection & Response | SOC Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2338bdf8%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z%22/></svg>">
+</head>
+
+<body>
+  <div class="app-container">
+
+    <!-- TOP HEADER / SOC COMMAND BAR -->
+    <header class="soc-header" role="banner">
+      <div class="brand-section">
+        <div class="brand-icon-shield" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+        </div>
+        <div class="brand-titles">
+          <h1>
+            AUTONOMOUS MULTI-AGENT CYBERSECURITY SOC
+            <span class="academic-course-pill">23CSE401 - FOAI</span>
+          </h1>
+          <p class="brand-subtitle">Amrita Vishwa Vidyapeetham &bull; Real-Time Threat Detection & Response Platform</p>
+        </div>
+      </div>
+
+      <div class="header-status-group">
+        <!-- Live Clock Chip -->
+        <div class="engine-status-badge" id="liveClockBadge" style="display: none;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span id="liveClockText">UTC 12:00:00</span>
+        </div>
+
+        <!-- Backend Status Badge -->
+        <div class="engine-status-badge" id="engineStatusBadge" title="Engine Status">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span id="engineStatusText">CONNECTING TO PYTHON BACKEND...</span>
+        </div>
+
+        <!-- Controls -->
+        <div class="header-controls">
+          <button class="academic-viva-btn" id="openVivaModalBtn"
+            title="Academic Defense Spec & Viva Dossier (Press 'V')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+              <path d="M6 12v5c3 3 9 3 12 0v-5" />
+            </svg>
+            <span>Defense Dossier</span>
+          </button>
+          <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark / Light Theme"
+            title="Toggle Theme (T)">
+            <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          </button>
+          <button class="action-btn-sm" id="exportJsonBtn" aria-label="Export Incident JSON"
+            title="Export Incident JSON">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- TELEMETRY STATUS RIBBON BAR -->
+    <div class="telemetry-ticker" role="region" aria-label="Live Telemetry Bar">
+      <div class="ticker-item">
+        <span class="ticker-label">ACTIVE INCIDENT:</span>
+        <span class="ticker-val status-cyan" id="tickerIncidentId">SCENARIO-1</span>
+      </div>
+      <div class="ticker-item">
+        <span class="ticker-label">TARGET ASSET:</span>
+        <span class="ticker-val" id="tickerTargetAsset">CORE_DATABASE</span>
+      </div>
+      <div class="ticker-item">
+        <span class="ticker-label">INCIDENT STATUS:</span>
+        <span class="ticker-val status-elevated" id="tickerStatus">READY TO DISPATCH</span>
+      </div>
+      <div class="ticker-item">
+        <span class="ticker-label">ACTIVE AGENTS:</span>
+        <span class="ticker-val" id="tickerActiveAgents">4 / 4 Autonomous</span>
+      </div>
+      <div class="ticker-item">
+        <span class="ticker-label">SMART ROUTING SAVINGS:</span>
+        <span class="ticker-val status-safe" id="tickerSavings">0 Calls Avoided</span>
+      </div>
+      <div class="ticker-item">
+        <span class="ticker-label">PIPELINE LATENCY:</span>
+        <span class="ticker-val status-cyan" id="tickerLatency">0.00 ms</span>
+      </div>
+    </div>
+
+    <!-- MAIN NAVIGATION TABS -->
+    <nav class="main-nav-bar" role="navigation" aria-label="Primary Dashboard Navigation">
+      <ul class="nav-tabs-list" role="tablist">
+        <li>
+          <button class="nav-tab-btn active" data-tab="tab-simulator" role="tab" aria-selected="true"
+            id="tabBtnSimulator">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+              <polyline points="14 2 14 8 20 8" />
+              <path d="m10 13-2 2 2 2" />
+              <path d="m14 17 2-2-2-2" />
+            </svg>
+            1. Incident Simulator
+            <span class="nav-tab-badge">4 Scenarios</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-tab-btn" data-tab="tab-graph" role="tab" aria-selected="false" id="tabBtnGraph">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+            2. Collaboration Graph
+            <span class="nav-tab-badge">Live Packets</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-tab-btn" data-tab="tab-reasoning" role="tab" aria-selected="false" id="tabBtnReasoning">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            3. Reasoning & A* Search
+            <span class="nav-tab-badge">Formula & Heuristics</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-tab-btn" data-tab="tab-evaluation" role="tab" aria-selected="false" id="tabBtnEvaluation">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20v-6M6 20V10M18 20V4" />
+            </svg>
+            4. Evaluation & Benchmarks
+            <span class="nav-tab-badge">46 Tests &bull; 1k Iter</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- MAIN WORKSPACE CONTENT -->
+    <main class="workspace-content">
+
+      <!-- TOP 4 SPECIALIZED AGENTS OVERVIEW CARDS -->
+      <section class="agents-overview-grid" aria-label="Multi-Agent System Overview">
+
+        <!-- Agent 1 Card: Crosshair Radar Sensor Icon -->
+        <article class="agent-node-card agent-1" id="agentCard1">
+          <div class="agent-card-header">
+            <div class="agent-identity">
+              <div class="agent-avatar-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="22" y1="12" x2="18" y2="12" />
+                  <line x1="6" y1="12" x2="2" y2="12" />
+                  <line x1="12" y1="6" x2="12" y2="2" />
+                  <line x1="12" y1="22" x2="12" y2="18" />
+                  <circle cx="12" cy="12" r="4" />
+                </svg>
+              </div>
+              <div class="agent-name-box">
+                <h3>Agent 1: DETECT</h3>
+                <span class="agent-role-pill">Intrusion Detection</span>
+              </div>
+            </div>
+            <div class="agent-status-badge idle" id="agentStatus1">IDLE</div>
+          </div>
+          <p class="agent-member-lead">Lead: Nanthakumaran (CB.SC.U4CSE23341)</p>
+          <div class="agent-key-metric">
+            <span class="metric-key">Perception Model</span>
+            <span class="metric-val" id="agent1Metric">Random Forest (100 Trees)</span>
+          </div>
+          <div class="agent-key-metric" style="margin-top: 4px;">
+            <span class="metric-key">Runtime / Latency</span>
+            <span class="metric-val highlight-cyan" id="agent1Runtime">-- ms</span>
+          </div>
+        </article>
+
+        <!-- Agent 2 Card: Neural Knowledge & CIA Triad Prism Icon -->
+        <article class="agent-node-card agent-2" id="agentCard2">
+          <div class="agent-card-header">
+            <div class="agent-identity">
+              <div class="agent-avatar-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 2 22 22 22" />
+                  <circle cx="12" cy="14" r="2" />
+                </svg>
+              </div>
+              <div class="agent-name-box">
+                <h3>Agent 2: ANALYZE</h3>
+                <span class="agent-role-pill">Threat & Security Analysis</span>
+              </div>
+            </div>
+            <div class="agent-status-badge idle" id="agentStatus2">IDLE</div>
+          </div>
+          <p class="agent-member-lead">Lead: Dhinesh chandra (CB.SC.U4CSE23310)</p>
+          <div class="agent-key-metric">
+            <span class="metric-key">Reasoning Engine</span>
+            <span class="metric-val" id="agent2Metric">Symbolic CIA Triad Mapping</span>
+          </div>
+          <div class="agent-key-metric" style="margin-top: 4px;">
+            <span class="metric-key">Runtime / Latency</span>
+            <span class="metric-val highlight-cyan" id="agent2Runtime">-- ms</span>
+          </div>
+        </article>
+
+        <!-- Agent 3 Card: MITRE ATT&CK STIX 2.0 Graph Nodes Icon -->
+        <article class="agent-node-card agent-3" id="agentCard3">
+          <div class="agent-card-header">
+            <div class="agent-identity">
+              <div class="agent-avatar-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="5" cy="6" r="3" />
+                  <circle cx="12" cy="18" r="3" />
+                  <circle cx="19" cy="6" r="3" />
+                  <line x1="7.5" y1="7.5" x2="10" y2="15.5" />
+                  <line x1="16.5" y1="7.5" x2="14" y2="15.5" />
+                </svg>
+              </div>
+              <div class="agent-name-box">
+                <h3>Agent 3: ENRICH</h3>
+                <span class="agent-role-pill">Threat Intelligence</span>
+              </div>
+            </div>
+            <div class="agent-status-badge idle" id="agentStatus3">IDLE</div>
+          </div>
+          <p class="agent-member-lead">Lead: Vejju Sasi Kiran Yasaswi (CB.SC.U4CSE23356)</p>
+          <div class="agent-key-metric">
+            <span class="metric-key">Knowledge Rep</span>
+            <span class="metric-val" id="agent3Metric">ATT&CK STIX + CISA KEV</span>
+          </div>
+          <div class="agent-key-metric" style="margin-top: 4px;">
+            <span class="metric-key">Runtime / Latency</span>
+            <span class="metric-val highlight-cyan" id="agent3Runtime">-- ms</span>
+          </div>
+        </article>
+
+        <!-- Agent 4 Card: Defense Shield Matrix & Tactical Compass Icon -->
+        <article class="agent-node-card agent-4" id="agentCard4">
+          <div class="agent-card-header">
+            <div class="agent-identity">
+              <div class="agent-avatar-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <circle cx="12" cy="11" r="3" />
+                  <line x1="12" y1="8" x2="12" y2="14" />
+                  <line x1="9" y1="11" x2="15" y2="11" />
+                </svg>
+              </div>
+              <div class="agent-name-box">
+                <h3>Agent 4: ASSESS + PLAN</h3>
+                <span class="agent-role-pill">Risk & Response Planning</span>
+              </div>
+            </div>
+            <div class="agent-status-badge idle" id="agentStatus4">IDLE</div>
+          </div>
+          <p class="agent-member-lead">Lead: Vejju Sasi Kiran Yasaswi (CB.SC.U4CSE23356)</p>
+          <div class="agent-key-metric">
+            <span class="metric-key">Search Strategy</span>
+            <span class="metric-val" id="agent4Metric">Informed Cost-Optimal A*</span>
+          </div>
+          <div class="agent-key-metric" style="margin-top: 4px;">
+            <span class="metric-key">Runtime / Latency</span>
+            <span class="metric-val highlight-cyan" id="agent4Runtime">-- ms</span>
+          </div>
+        </article>
+      </section>
+
+      <!-- TAB 1: INCIDENT SCENARIO SIMULATOR -->
+      <section class="tab-pane active" id="tab-simulator" role="tabpanel" aria-labelledby="tabBtnSimulator">
+        <div class="simulator-layout">
+
+          <!-- Left Sidebar Controls -->
+          <div class="simulator-sidebar">
+            <div class="control-panel-card">
+              <h2 class="panel-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
+                </svg>
+                Select Scenario Preset
+              </h2>
+              <div class="scenario-list" id="scenariosContainer">
+                <button class="scenario-card-btn active" data-scenario="SCENARIO-1">
+                  <div class="scenario-top-line">
+                    <span class="scenario-id-tag">SCENARIO-1</span>
+                    <span class="scenario-badge badge-critical">Full 4-Agent</span>
+                  </div>
+                  <h3 class="scenario-name">Credential Brute Force on Core Database</h3>
+                  <span class="scenario-target">Target: CORE_DATABASE</span>
+                </button>
+
+                <button class="scenario-card-btn" data-scenario="SCENARIO-2">
+                  <div class="scenario-top-line">
+                    <span class="scenario-id-tag">SCENARIO-2</span>
+                    <span class="scenario-badge badge-critical">CISA KEV CVE</span>
+                  </div>
+                  <h3 class="scenario-name">Weaponized Volumetric DoS Exploit</h3>
+                  <span class="scenario-target">Target: DMZ_WEB_SERVER (CVE-2026-88779)</span>
+                </button>
+
+                <button class="scenario-card-btn" data-scenario="SCENARIO-3">
+                  <div class="scenario-top-line">
+                    <span class="scenario-id-tag">SCENARIO-3</span>
+                    <span class="scenario-badge badge-savings">Smart Routing</span>
+                  </div>
+                  <h3 class="scenario-name">Legitimate User Session (Early Exit)</h3>
+                  <span class="scenario-target">Target: LOW_VALUE_WORKSTATION (75% Saved)</span>
+                </button>
+
+                <button class="scenario-card-btn" data-scenario="SCENARIO-4">
+                  <div class="scenario-top-line">
+                    <span class="scenario-id-tag">SCENARIO-4</span>
+                    <span class="scenario-badge badge-loop">Backward Loop</span>
+                  </div>
+                  <h3 class="scenario-name">Anomalous Intrusion (Missing Asset Context)</h3>
+                  <span class="scenario-target">Target: UNKNOWN &rarr; A4 &harr; A2 Clarification</span>
+                </button>
+              </div>
+
+              <div class="sim-actions-group">
+                <button class="btn-primary" id="runScenarioBtn">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                  Launch Pipeline
+                </button>
+                <button class="btn-secondary" id="customScenarioModalBtn" title="Customize Telemetry Payload">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                  </svg>
+                  Custom
+                </button>
+              </div>
+            </div>
+
+            <!-- Smart Routing Architecture Explanation -->
+            <div class="control-panel-card">
+              <h2 class="panel-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Smart Routing Telemetry
+              </h2>
+              <p style="font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.5;">
+                In benign traffic with &ge;80% model confidence, the orchestrator triggers an <strong>Early
+                  Exit</strong>, preventing redundant inference across Agents 2, 3, and 4.
+              </p>
+              <div class="agent-key-metric" style="margin-bottom: 6px;">
+                <span class="metric-key">Threshold (&theta;<sub>benign</sub>)</span>
+                <span class="metric-val highlight-cyan">0.80 (80.0%)</span>
+              </div>
+              <div class="agent-key-metric">
+                <span class="metric-key">Early Exit Efficiency</span>
+                <span class="metric-val highlight-emerald">75.0% Calls Saved</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Stage: Active Incident Details & Execution Stream -->
+          <div class="simulator-stage">
+
+            <!-- Banner -->
+            <div class="incident-banner">
+              <div class="incident-title-box">
+                <h2 id="activeIncidentHeading">Credential Brute Force Intrusion against Core Database</h2>
+                <div class="incident-meta-row">
+                  <span>Target: <strong id="activeTargetAssetDisplay">CORE_DATABASE</strong></span>
+                  <span>ID: <strong id="activeIncidentIdDisplay">SCENARIO-1</strong></span>
+                  <span>Category: <strong id="activeCategoryDisplay">Credential Attack</strong></span>
+                  <span>Pipeline Latency: <strong id="activeRuntimeDisplay" class="highlight-cyan">0.00
+                      ms</strong></span>
+                </div>
+              </div>
+              <div class="incident-status-tag status-tag-active" id="activeStatusBadge">
+                <span class="pulse-dot"></span>
+                <span id="activeStatusBadgeText">READY TO DISPATCH</span>
+              </div>
+            </div>
+
+            <!-- Ingested Telemetry Grid -->
+            <div class="telemetry-grid" id="telemetryGrid">
+              <div class="telemetry-cell">
+                <span class="cell-label">Payload Size</span>
+                <span class="cell-value" id="dispPacketSize">297 B</span>
+              </div>
+              <div class="telemetry-cell">
+                <span class="cell-label">Protocol</span>
+                <span class="cell-value" id="dispProtocol">TCP</span>
+              </div>
+              <div class="telemetry-cell">
+                <span class="cell-label">Auth Velocity</span>
+                <span class="cell-value" id="dispAuthVelocity">3 / 8 Failed</span>
+              </div>
+              <div class="telemetry-cell">
+                <span class="cell-label">Duration</span>
+                <span class="cell-value" id="dispDuration">1421.4 s</span>
+              </div>
+              <div class="telemetry-cell">
+                <span class="cell-label">IP Reputation</span>
+                <span class="cell-value" id="dispIpReputation">0.345</span>
+              </div>
+              <div class="telemetry-cell">
+                <span class="cell-label">Time Anomaly</span>
+                <span class="cell-value" id="dispTimeAnomaly">Yes (1)</span>
+              </div>
+              <div class="telemetry-cell">
+                <span class="cell-label">Encryption</span>
+                <span class="cell-value" id="dispEncryption">AES</span>
+              </div>
+              <div class="telemetry-cell">
+                <span class="cell-label">Vulnerability / CVE</span>
+                <span class="cell-value highlight-amber" id="dispCve">None</span>
+              </div>
+            </div>
+
+            <!-- Pipeline Execution Stream Accordion / Live Cards -->
+            <div class="pipeline-execution-view">
+              <div class="pipeline-header">
+                <h3 style="font-size: 0.88rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                    <polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                  Pipeline Lifecycle & Telemetry Log
+                </h3>
+                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);"
+                  id="pipelineStepCounter">Step 0 / 5</span>
+              </div>
+
+              <div class="pipeline-steps-container">
+
+                <!-- Step 1: Ingestion & Perception -->
+                <div class="pipeline-step-item active" id="stepItem1">
+                  <div class="step-item-head">
+                    <div class="step-title-group">
+                      <span class="step-number">1</span>
+                      <strong>[AGENT 1: DETECT] Supervised Classification & Perception</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="step-runtime-badge" id="step1RuntimeBadge">-- ms</span>
+                      <span class="agent-status-badge completed" id="step1Badge">READY</span>
+                    </div>
+                  </div>
+                  <div class="step-item-body" id="step1Body">
+                    <div class="log-entry-row">&bull; Ingested 9 network telemetry features from raw session stream.
+                    </div>
+                    <div class="log-entry-row">&bull; Classification: <span class="highlight-cyan"
+                        id="step1Pred">[ATTACK]</span> (Confidence: <span id="step1Conf">100.0%</span>)</div>
+                    <div class="log-entry-row">&bull; Inferred Threat Type: <span class="highlight-amber"
+                        id="step1Type">Brute Force</span></div>
+                    <div class="log-entry-row" id="step1Routing">&bull; Smart Routing: Threshold test passed &rarr;
+                      Forwarding to Agent 2 for symbolic attribution.</div>
+                  </div>
+                </div>
+
+                <!-- Step 2: Threat Analysis -->
+                <div class="pipeline-step-item" id="stepItem2">
+                  <div class="step-item-head">
+                    <div class="step-title-group">
+                      <span class="step-number">2</span>
+                      <strong>[AGENT 2: ANALYZE] Symbolic Threat Reasoning & CIA Mapping</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="step-runtime-badge" id="step2RuntimeBadge">-- ms</span>
+                      <span class="agent-status-badge idle" id="step2Badge">WAITING</span>
+                    </div>
+                  </div>
+                  <div class="step-item-body" id="step2Body">
+                    <div class="log-entry-row">&bull; Threat Category: <span class="highlight-cyan"
+                        id="step2Cat">Credential Attack</span></div>
+                    <div class="log-entry-row">&bull; Impacted CIA Triad Property: <span class="highlight-amber"
+                        id="step2Cia">Confidentiality</span></div>
+                    <div class="log-entry-row">&bull; Base Severity: <span class="highlight-crimson"
+                        id="step2Sev">CRITICAL (7.0/10)</span></div>
+                    <div class="log-entry-row">&bull; Extracted Indicators of Compromise (IoCs): <span id="step2Iocs">3
+                        Indicators synthesized</span></div>
+                  </div>
+                </div>
+
+                <!-- Step 3: Threat Intelligence -->
+                <div class="pipeline-step-item" id="stepItem3">
+                  <div class="step-item-head">
+                    <div class="step-title-group">
+                      <span class="step-number">3</span>
+                      <strong>[AGENT 3: ENRICH] STIX 2.0 Graph Traversal & CISA KEV</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="step-runtime-badge" id="step3RuntimeBadge">-- ms</span>
+                      <span class="agent-status-badge idle" id="step3Badge">WAITING</span>
+                    </div>
+                  </div>
+                  <div class="step-item-body" id="step3Body">
+                    <div class="log-entry-row">&bull; Primary MITRE ATT&CK Technique: <span class="highlight-cyan"
+                        id="step3Technique">T1110 (Brute Force)</span> (Score: <span id="step3Score">62.9%</span>)</div>
+                    <div class="log-entry-row">&bull; Kill-Chain Tactic: <span class="highlight-amber"
+                        id="step3Tactic">Credential Access</span></div>
+                    <div class="log-entry-row">&bull; CISA KEV Lookup: <span id="step3Cisa">Not Listed in KEV (Standard
+                        Threat)</span></div>
+                    <div class="log-entry-row">&bull; Known Threat Groups (BFS depth=2): <span id="step3Groups">APT38,
+                        APT41, Dragonfly</span></div>
+                  </div>
+                </div>
+
+                <!-- Step 4: Risk & Planning -->
+                <div class="pipeline-step-item" id="stepItem4">
+                  <div class="step-item-head">
+                    <div class="step-title-group">
+                      <span class="step-number">4</span>
+                      <strong>[AGENT 4: ASSESS + PLAN] Deterministic Risk & A* Response</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="step-runtime-badge" id="step4RuntimeBadge">-- ms</span>
+                      <span class="agent-status-badge idle" id="step4Badge">WAITING</span>
+                    </div>
+                  </div>
+                  <div class="step-item-body" id="step4Body">
+                    <div class="log-entry-row">&bull; Deterministic Composite Risk Score: <span
+                        class="highlight-crimson" id="step4Risk">77.1 / 100 (CRITICAL)</span></div>
+                    <div class="log-entry-row">&bull; A* Cost-Optimal Path: <span class="highlight-emerald"
+                        id="step4Path">ATTACK_DETECTED &rarr; THREAT_CONFIRMED &rarr; SOURCE_BLOCKED &rarr;
+                        INCIDENT_CONTROLLED</span></div>
+                    <div class="log-entry-row">&bull; Path Operational Cost: <span id="step4Cost">10.0</span> | Selected
+                      Immediate Action: <span class="highlight-cyan" id="step4Mitigation">BLOCK_SOURCE_IP</span></div>
+                    <div class="log-entry-row" id="step4Phasing">&bull; Phased Defense: [Immediate]: CORRELATE_TELEMETRY
+                      &bull; [Containment]: BLOCK_SOURCE_IP &bull; [Remediation]: RESET_CREDENTIALS</div>
+                  </div>
+                </div>
+
+                <!-- Step 5: Audit Log -->
+                <div class="pipeline-step-item" id="stepItem5">
+                  <div class="step-item-head">
+                    <div class="step-title-group">
+                      <span class="step-number">5</span>
+                      <strong>[CENTRAL ORCHESTRATOR] Multi-Agent Communication Trace</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span class="step-runtime-badge" id="step5RuntimeBadge">-- ms</span>
+                      <span class="agent-status-badge idle" id="step5Badge">WAITING</span>
+                    </div>
+                  </div>
+                  <div class="step-item-body" id="step5Body" style="max-height: 150px; overflow-y: auto;">
+                    <div class="log-entry-row">Audit log initialized. Dispatching messages...</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: ANIMATED MULTI-AGENT COLLABORATION GRAPH -->
+      <section class="tab-pane" id="tab-graph" role="tabpanel" aria-labelledby="tabBtnGraph">
+        <div class="graph-module-container">
+
+          <!-- Top Scrubber & Playback Controls -->
+          <div class="graph-top-controls">
+            <div class="scrubber-controls-group">
+              <button class="control-icon-btn" id="graphPlayPauseBtn" aria-label="Play / Pause Animation"
+                title="Play / Pause (Space)">
+                <svg id="playPauseIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+              </button>
+              <button class="control-icon-btn" id="graphStepBackBtn" aria-label="Step Back" title="Step Back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="19 20 9 12 19 4 19 20" />
+                  <line x1="5" y1="19" x2="5" y2="5" />
+                </svg>
+              </button>
+              <button class="control-icon-btn" id="graphStepForwardBtn" aria-label="Step Forward"
+                title="Step Forward (&rarr;)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 4 15 12 5 20 5 4" />
+                  <line x1="19" y1="5" x2="19" y2="19" />
+                </svg>
+              </button>
+              <button class="control-icon-btn" id="graphResetBtn" aria-label="Reset Animation" title="Reset Timeline">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 2v6h6" />
+                  <path d="M21 12A9 9 0 0 0 6 5.3L3 8" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Timeline Scrubber -->
+            <div class="timeline-slider-box">
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);"
+                id="graphTimeCurrent">0.0s</span>
+              <input type="range" min="0" max="100" value="0" class="timeline-scrubber" id="graphTimelineScrubber"
+                aria-label="Timeline Scrubber">
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);"
+                id="graphTimeTotal">10.0s</span>
+            </div>
+
+            <!-- Speed selector -->
+            <div class="speed-selector-group">
+              <span style="font-size: 0.72rem; color: var(--text-muted); margin-right: 4px;">Speed:</span>
+              <button class="speed-pill-btn" data-speed="0.5">0.5x</button>
+              <button class="speed-pill-btn active" data-speed="1.0">1.0x</button>
+              <button class="speed-pill-btn" data-speed="2.0">2.0x</button>
+            </div>
+          </div>
+
+          <!-- Interactive Canvas Viewport -->
+          <div class="graph-canvas-wrapper" id="canvasContainer">
+            <canvas id="collaborationCanvas"></canvas>
+
+            <!-- Bottom Left Legend -->
+            <div class="graph-legend-overlay">
+              <div class="legend-item">
+                <span class="legend-line flow-forward"></span>
+                <span>Forward Message (ALERT, REQ, RES)</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-line flow-backward"></span>
+                <span>Backward Clarification (A4 &harr; A2)</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-line flow-pruned"></span>
+                <span>Smart Routing Pruned Link</span>
+              </div>
+            </div>
+
+            <!-- Interactive Node Inspector Drawer -->
+            <aside class="graph-node-inspector-drawer" id="nodeInspectorDrawer">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h4 style="font-size: 0.85rem; font-weight: 700;" id="inspNodeTitle">Agent 1: DETECT</h4>
+                <span class="agent-status-badge idle" id="inspNodeStatus" style="font-size: 0.65rem;">ACTIVE</span>
+              </div>
+              <p style="font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 8px;" id="inspNodeRole">
+                Perception, Feature Normalization, Supervised Random Forest Classifier.
+              </p>
+              <div
+                style="font-family: var(--font-mono); font-size: 0.7rem; display: flex; flex-direction: column; gap: 5px;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Incoming Packet:</span>
+                  <span class="highlight-cyan" id="inspIncomingMsg">RAW_TELEMETRY</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Outgoing Message:</span>
+                  <span class="highlight-amber" id="inspOutgoingMsg">ALERT</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Confidence Score:</span>
+                  <span class="highlight-emerald" id="inspConfidence">100.0%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">Execution Runtime:</span>
+                  <span class="highlight-cyan" id="inspRuntime">2.73 ms</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: var(--text-muted);">PEAS Sensor:</span>
+                  <span id="inspSensor">Packet Flows / Auth</span>
+                </div>
+              </div>
+            </aside>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 3: STEP-BY-STEP REASONING & A* SEARCH DRAWER -->
+      <section class="tab-pane" id="tab-reasoning" role="tabpanel" aria-labelledby="tabBtnReasoning">
+        <div class="reasoning-grid">
+
+          <!-- Left Card: Mathematical Formula Breakdown & Interactive Risk Sliders -->
+          <article class="theory-card">
+            <h2 class="panel-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+              Deterministic Multi-Factor Risk Model (Agent 4)
+            </h2>
+            <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5;">
+              In critical infrastructure SOCs, generative LLMs must not fabricate or hallucinate numerical risk values.
+              Agent 4 computes a deterministic composite score bounded in $[0, 100]$:
+            </p>
+
+            <div class="formula-display-banner">
+              Risk = 0.25 S<sub>sev</sub> + 0.20 S<sub>asset</sub> + 0.20 S<sub>exploit</sub> + 0.15 S<sub>impact</sub>
+              + 0.10 S<sub>exposure</sub> + 0.10 S<sub>conf</sub>
+            </div>
+
+            <!-- Interactive Risk Factor Sliders -->
+            <div class="formula-interactive-sliders">
+
+              <div class="slider-row">
+                <div class="slider-info">
+                  <div class="slider-label">Threat Severity (S<sub>sev</sub>)</div>
+                  <div class="slider-weight-val">Weight: 25% (0.25)</div>
+                </div>
+                <input type="range" min="0" max="100" value="70" class="slider-input-range" id="sliderSev">
+                <span class="slider-score-badge highlight-cyan" id="badgeSev">70.0</span>
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-info">
+                  <div class="slider-label">Asset Criticality (S<sub>asset</sub>)</div>
+                  <div class="slider-weight-val">Weight: 20% (0.20)</div>
+                </div>
+                <input type="range" min="0" max="100" value="87" class="slider-input-range" id="sliderAsset">
+                <span class="slider-score-badge highlight-cyan" id="badgeAsset">86.7</span>
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-info">
+                  <div class="slider-label">Exploitability (S<sub>exploit</sub>)</div>
+                  <div class="slider-weight-val">Weight: 20% (0.20)</div>
+                </div>
+                <input type="range" min="0" max="100" value="75" class="slider-input-range" id="sliderExploit">
+                <span class="slider-score-badge highlight-cyan" id="badgeExploit">75.0</span>
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-info">
+                  <div class="slider-label">CIA Impact (S<sub>impact</sub>)</div>
+                  <div class="slider-weight-val">Weight: 15% (0.15)</div>
+                </div>
+                <input type="range" min="0" max="100" value="75" class="slider-input-range" id="sliderImpact">
+                <span class="slider-score-badge highlight-cyan" id="badgeImpact">75.0</span>
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-info">
+                  <div class="slider-label">Network Exposure (S<sub>exposure</sub>)</div>
+                  <div class="slider-weight-val">Weight: 10% (0.10)</div>
+                </div>
+                <input type="range" min="0" max="100" value="90" class="slider-input-range" id="sliderExposure">
+                <span class="slider-score-badge highlight-cyan" id="badgeExposure">90.0</span>
+              </div>
+
+              <div class="slider-row">
+                <div class="slider-info">
+                  <div class="slider-label">Detection Conf (S<sub>conf</sub>)</div>
+                  <div class="slider-weight-val">Weight: 10% (0.10)</div>
+                </div>
+                <input type="range" min="0" max="100" value="100" class="slider-input-range" id="sliderConf">
+                <span class="slider-score-badge highlight-cyan" id="badgeConf">100.0</span>
+              </div>
+
+            </div>
+
+            <!-- Recalculated Risk Score Display -->
+            <div class="risk-recalc-output-box">
+              <div>
+                <span
+                  style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Composite
+                  Risk Score</span>
+                <div class="risk-score-big" id="calcCompositeScore">77.1</div>
+                <span style="font-size: 0.72rem; color: var(--text-secondary);" id="calcTierExplanation">CRITICAL
+                  Priority (&ge;75) &rarr; Emergency Containment</span>
+              </div>
+              <div class="scenario-badge badge-critical" style="font-size: 0.88rem; padding: 6px 14px;"
+                id="calcTierBadge">CRITICAL</div>
+            </div>
+          </article>
+
+          <!-- Right Card: State-Space Search Comparison (BFS vs A*) -->
+          <article class="theory-card">
+            <h2 class="panel-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="6" cy="6" r="3" />
+                <circle cx="18" cy="18" r="3" />
+                <line x1="8.5" y1="8.5" x2="15.5" y2="15.5" />
+              </svg>
+              State-Space Search Comparison: Uninformed BFS vs Informed A*
+            </h2>
+            <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">
+              Autonomous containment planning modeled on formal Response Graph G = (V, E) where edge costs reflect real
+              operational friction, service disruption, and SOC triage latency.
+            </p>
+
+            <div class="search-comparison-visual">
+              <div class="search-cards-split">
+
+                <!-- BFS Card -->
+                <div class="search-method-card">
+                  <span class="method-tag tag-bfs">BFS (Uninformed Baseline)</span>
+                  <p style="font-size: 0.74rem; color: var(--text-muted);">
+                    Blind layer-by-layer FIFO queue minimizing only edge hop-count. Unaware of edge costs.
+                  </p>
+                  <div class="search-stats-list">
+                    <div class="search-stat-row">
+                      <span>Mitigation Path</span>
+                      <span style="color: var(--accent-amber); font-size: 0.68rem;">DETECTED &rarr; SOC &rarr;
+                        CONTROLLED</span>
+                    </div>
+                    <div class="search-stat-row">
+                      <span>Hop Count</span>
+                      <span>2 Hops</span>
+                    </div>
+                    <div class="search-stat-row">
+                      <span>Path Cost</span>
+                      <span class="highlight-crimson">12.0 (Sub-optimal)</span>
+                    </div>
+                    <div class="search-stat-row">
+                      <span>Nodes Explored</span>
+                      <span class="highlight-amber">8 Nodes</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- A* Card -->
+                <div class="search-method-card" style="border-color: rgba(56, 189, 248, 0.4);">
+                  <span class="method-tag tag-astar">A* Search (Informed Optimal)</span>
+                  <p style="font-size: 0.74rem; color: var(--text-muted);">
+                    Priority queue evaluation f(n) = g(n) + h(n) with provably admissible &amp; consistent heuristic.
+                  </p>
+                  <div class="search-stats-list">
+                    <div class="search-stat-row">
+                      <span>Mitigation Path</span>
+                      <span class="highlight-emerald" style="font-size: 0.68rem;">DETECTED &rarr; CONFIRMED &rarr;
+                        BLOCKED &rarr; GOAL</span>
+                    </div>
+                    <div class="search-stat-row">
+                      <span>Hop Count</span>
+                      <span>3 Hops</span>
+                    </div>
+                    <div class="search-stat-row">
+                      <span>Path Cost</span>
+                      <span class="highlight-emerald">10.0 (Cost-Optimal)</span>
+                    </div>
+                    <div class="search-stat-row">
+                      <span>Nodes Explored</span>
+                      <span class="highlight-emerald">4 Nodes (50% Fewer)</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Cost Savings Callout -->
+              <div class="agent-key-metric" style="padding: 10px 14px;">
+                <span class="metric-key" style="font-size: 0.8rem;">Provable Operational Cost Reduction:</span>
+                <span class="metric-val highlight-emerald" style="font-size: 0.95rem;">16.7% Cost Savings (10.0 vs
+                  12.0)</span>
+              </div>
+
+              <!-- Academic Mathematical Proof Callout -->
+              <div class="proof-callout-box">
+                <strong>Admissibility &amp; Consistency Proof:</strong><br>
+                1. <em>Admissibility</em>: &forall; n &isin; V, h(n) &le; h*(n). Heuristic never overestimates true
+                remaining cost to <code
+                  style="font-family: var(--font-mono); color: var(--accent-cyan);">INCIDENT_CONTROLLED</code>.<br>
+                2. <em>Consistency (Triangle Inequality)</em>: &forall; (u, v) &isin; E, h(u) &le; c(u, a, v) + h(v).
+                Guarantees monotonic non-decreasing f(n) values and that no node is expanded more than once.
+              </div>
+
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- TAB 4: SYSTEM EVALUATION & BENCHMARK SUITE -->
+      <section class="tab-pane" id="tab-evaluation" role="tabpanel" aria-labelledby="tabBtnEvaluation">
+        <div class="eval-suite-layout">
+
+          <!-- Top Row 5 Metric KPI Cards -->
+          <div class="metrics-cards-row">
+            <div class="metric-kpi-card">
+              <span class="kpi-title">Accuracy</span>
+              <span class="kpi-value highlight-cyan">88.63%</span>
+              <span class="kpi-subtext">+2.09% vs Decision Tree (86.54%)</span>
+            </div>
+            <div class="metric-kpi-card">
+              <span class="kpi-title">Precision (Attack)</span>
+              <span class="kpi-value highlight-emerald">100.00%</span>
+              <span class="kpi-subtext">Zero False Positives</span>
+            </div>
+            <div class="metric-kpi-card">
+              <span class="kpi-title">Recall (Attack)</span>
+              <span class="kpi-value highlight-amber">74.56%</span>
+              <span class="kpi-subtext">Attack Catch Rate</span>
+            </div>
+            <div class="metric-kpi-card">
+              <span class="kpi-title">F1-Score</span>
+              <span class="kpi-value highlight-cyan">85.43%</span>
+              <span class="kpi-subtext">Harmonic Mean</span>
+            </div>
+            <div class="metric-kpi-card">
+              <span class="kpi-title">False Positive Rate</span>
+              <span class="kpi-value highlight-emerald">0.00%</span>
+              <span class="kpi-subtext">Eliminates SOC Alert Fatigue</span>
+            </div>
+          </div>
+
+          <!-- Benchmarks Grid -->
+          <div class="benchmarks-grid">
+
+            <!-- Confusion Matrix & Academic Defense Card -->
+            <div class="eval-card">
+              <h2 class="panel-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                  <line x1="3" y1="9" x2="21" y2="9" />
+                  <line x1="9" y1="21" x2="9" y2="9" />
+                </svg>
+                Model Perception Benchmark (Test Set: N=1,908)
+              </h2>
+
+              <div class="cm-container">
+                <div class="cm-matrix-grid">
+                  <div></div>
+                  <div class="cm-header-cell">PREDICTED NORMAL</div>
+                  <div class="cm-header-cell">PREDICTED ATTACK</div>
+
+                  <div class="cm-header-cell" style="writing-mode: vertical-rl; transform: rotate(180deg);">ACTUAL
+                    NORMAL</div>
+                  <div class="cm-data-cell cm-cell-tn">
+                    <span class="cm-count highlight-emerald">1,055</span>
+                    <span class="cm-sub">True Negatives (TN)</span>
+                  </div>
+                  <div class="cm-data-cell cm-cell-fp">
+                    <span class="cm-count" style="color: var(--text-muted);">0</span>
+                    <span class="cm-sub">False Positives (FP)</span>
+                  </div>
+
+                  <div class="cm-header-cell" style="writing-mode: vertical-rl; transform: rotate(180deg);">ACTUAL
+                    ATTACK</div>
+                  <div class="cm-data-cell cm-cell-fn">
+                    <span class="cm-count highlight-amber">217</span>
+                    <span class="cm-sub">False Negatives (FN)</span>
+                  </div>
+                  <div class="cm-data-cell cm-cell-tp">
+                    <span class="cm-count highlight-cyan">636</span>
+                    <span class="cm-sub">True Positives (TP)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Academic Critique Callout -->
+              <div class="academic-callout-card">
+                <h4>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  Academic Defense: Base Rate Fallacy in Cybersecurity
+                </h4>
+                <p>
+                  In enterprise networks, attacks often represent &lt;1% of billions of raw packets. A naïve classifier
+                  guessing "NORMAL" on every packet achieves &gt;99% accuracy while permitting total system compromise.
+                  Thus, Precision (100.0%) and False Positive Rate (0.00%) are the paramount operational metrics for SOC
+                  viability.
+                </p>
+              </div>
+            </div>
+
+            <!-- Algorithmic 1000-Iteration Search Benchmark & Automated Tests -->
+            <div class="eval-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h2 class="panel-title" style="margin-bottom: 0;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                  </svg>
+                  Algorithmic Search Benchmark
+                </h2>
+                <button class="btn-primary" id="runBenchmarkBtn" style="padding: 5px 12px; font-size: 0.74rem;">
+                  Run 1,000 Iterations
+                </button>
+              </div>
+
+              <div id="benchmarkOutputBox"
+                style="background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; font-family: var(--font-mono); font-size: 0.75rem; margin-bottom: 16px;">
+                <div style="color: var(--text-muted); margin-bottom: 4px;">Click 'Run 1,000 Iterations' to execute live
+                  micro-benchmarks on Python backend:</div>
+                <div class="log-entry-row">&bull; BFS Average Query Latency: <span class="highlight-cyan"
+                    id="benchBfsTime">0.0063 ms</span></div>
+                <div class="log-entry-row">&bull; A* Average Query Latency: <span class="highlight-cyan"
+                    id="benchAstarTime">0.0076 ms</span></div>
+                <div class="log-entry-row">&bull; Total Path Cost: BFS = <span class="highlight-crimson">12.0</span> vs
+                  A* = <span class="highlight-emerald">10.0</span></div>
+                <div class="log-entry-row">&bull; A* Operational Cost Savings: <span
+                    class="highlight-emerald">16.7%</span> (4 nodes explored vs 8)</div>
+              </div>
+
+              <!-- Automated Test Suite Checklist -->
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 0.88rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 11l3 3L22 4" />
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                  </svg>
+                  Automated Test Suite Status (46 Unit Tests)
+                </h3>
+                <button class="btn-secondary" id="runTestsBtn" style="padding: 4px 10px; font-size: 0.7rem;">
+                  Re-run Tests
+                </button>
+              </div>
+
+              <div class="test-suite-checklist" id="testSuiteContainer">
+                <div class="test-module-row">
+                  <span class="test-mod-name">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" class="highlight-emerald">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    tests/test_agent1.py (Perception &amp; Imputation)
+                  </span>
+                  <span class="test-pass-pill">4 / 4 PASS</span>
+                </div>
+                <div class="test-module-row">
+                  <span class="test-mod-name">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" class="highlight-emerald">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    tests/test_agent2.py (Attribution &amp; CIA Triad)
+                  </span>
+                  <span class="test-pass-pill">4 / 4 PASS</span>
+                </div>
+                <div class="test-module-row">
+                  <span class="test-mod-name">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" class="highlight-emerald">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    tests/test_agent3.py (STIX Graph &amp; CISA KEV)
+                  </span>
+                  <span class="test-pass-pill">6 / 6 PASS</span>
+                </div>
+                <div class="test-module-row">
+                  <span class="test-mod-name">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" class="highlight-emerald">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    tests/test_agent4.py (Risk Model &amp; A* Planning)
+                  </span>
+                  <span class="test-pass-pill">8 / 8 PASS</span>
+                </div>
+                <div class="test-module-row">
+                  <span class="test-mod-name">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" class="highlight-emerald">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    tests/test_search.py (Heuristic Admissibility &amp; Consistency)
+                  </span>
+                  <span class="test-pass-pill">5 / 5 PASS</span>
+                </div>
+                <div class="test-module-row">
+                  <span class="test-mod-name">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" class="highlight-emerald">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    tests/test_collaboration.py (Dynamic Feedback Loops)
+                  </span>
+                  <span class="test-pass-pill">5 / 5 PASS</span>
+                </div>
+                <div class="test-module-row">
+                  <span class="test-mod-name">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" class="highlight-emerald">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    tests/test_end_to_end.py (12 Incident Scenarios)
+                  </span>
+                  <span class="test-pass-pill">12 / 12 PASS</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- CUSTOM INCIDENT CREATOR MODAL -->
+    <div class="modal-overlay" id="customScenarioModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle" style="font-size: 1.05rem; font-weight: 700;">Customize Network Telemetry Payload</h3>
+          <button class="action-btn-sm" id="closeModalBtn" aria-label="Close Modal">&times;</button>
+        </div>
+        <form id="customScenarioForm">
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label class="form-label" for="inpPacketSize">Packet Size (Bytes)</label>
+              <input type="number" id="inpPacketSize" class="form-input" value="350">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="inpProtocol">Protocol</label>
+              <select id="inpProtocol" class="form-select">
+                <option value="TCP">TCP</option>
+                <option value="UDP">UDP</option>
+                <option value="ICMP">ICMP</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="inpLoginAttempts">Total Login Attempts</label>
+              <input type="number" id="inpLoginAttempts" class="form-input" value="9">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="inpFailedLogins">Failed Logins</label>
+              <input type="number" id="inpFailedLogins" class="form-input" value="4">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="inpSessionDuration">Session Duration (Seconds)</label>
+              <input type="number" step="0.1" id="inpSessionDuration" class="form-input" value="1200.0">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="inpIpReputation">IP Reputation Score [0.0 - 1.0]</label>
+              <input type="number" step="0.01" min="0" max="1" id="inpIpReputation" class="form-input" value="0.25">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="inpTargetAsset">Target Asset</label>
+              <select id="inpTargetAsset" class="form-select">
+                <option value="CORE_DATABASE">CORE_DATABASE (Tier 1)</option>
+                <option value="DOMAIN_CONTROLLER">DOMAIN_CONTROLLER (Tier 1)</option>
+                <option value="DMZ_WEB_SERVER">DMZ_WEB_SERVER (Tier 2)</option>
+                <option value="LOW_VALUE_WORKSTATION">LOW_VALUE_WORKSTATION (Tier 3)</option>
+                <option value="UNKNOWN">UNKNOWN (Triggers Clarification)</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="inpCve">CVE Exploit Signature</label>
+              <input type="text" id="inpCve" class="form-input" placeholder="e.g. CVE-2026-88779">
+            </div>
+          </div>
+          <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px;">
+            <button type="button" class="btn-secondary" id="cancelModalBtn">Cancel</button>
+            <button type="submit" class="btn-primary">Apply &amp; Dispatch</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ACADEMIC DEFENSE & VIVA SPEC MODAL -->
+    <div class="modal-overlay" id="academicDossierModal" role="dialog" aria-modal="true" aria-labelledby="dossierTitle">
+      <div class="modal-content modal-lg">
+        <div class="modal-header-lg">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h3 id="dossierTitle" style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">
+                Academic Defense &amp; Architectural Specification
+              </h3>
+              <span class="academic-course-pill">23CSE401: FOAI</span>
+            </div>
+            <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
+              Department of Computer Science &amp; Engineering &bull; Amrita Vishwa Vidyapeetham
+            </p>
+          </div>
+          <button class="action-btn-sm" id="closeVivaModalBtn" aria-label="Close Modal">&times;</button>
+        </div>
+
+        <div class="dossier-tab-nav" role="tablist">
+          <button class="dossier-tab-btn active" data-dossier-tab="dossier-peas">1. PEAS &amp; AI Framework</button>
+          <button class="dossier-tab-btn" data-dossier-tab="dossier-proofs">2. Search &amp; Algorithms</button>
+          <button class="dossier-tab-btn" data-dossier-tab="dossier-viva">3. Faculty Viva Defense Q&amp;A</button>
+          <button class="dossier-tab-btn" data-dossier-tab="dossier-team">4. Team Responsibilities</button>
+        </div>
+
+        <div class="dossier-body">
+
+          <!-- Pane 1: PEAS & AI Taxonomy -->
+          <div class="dossier-pane active" id="dossier-peas">
+            <h4 style="font-size: 0.88rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 8px;">
+              Russell &amp; Norvig AI Agent Classification &amp; Formal PEAS Matrix
+            </h4>
+            <p style="font-size: 0.76rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px;">
+              This system transitions from legacy monolithic ML to a <strong>4-Agent Neuro-Symbolic Multi-Agent System
+                (MAS)</strong>.
+              Each agent fulfills a distinct architectural role within the Russell &amp; Norvig taxonomy:
+            </p>
+
+            <table class="dossier-table">
+              <thead>
+                <tr>
+                  <th>Agent &amp; Role</th>
+                  <th>Agent Type</th>
+                  <th>Performance Measure (P)</th>
+                  <th>Environment (E)</th>
+                  <th>Actuators (A)</th>
+                  <th>Sensors (S)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Agent 1: DETECT</strong><br><small style="color: var(--text-muted);">Intrusion
+                      Detection</small></td>
+                  <td><span class="status-pill status-cyan">Reflex Agent (RF Classifier)</span></td>
+                  <td>Classification Accuracy (88.6%), Recall (74.6%), Precision (100%), FPR (0.0%)</td>
+                  <td>Raw network session telemetry &amp; packet flows</td>
+                  <td>Security alert envelopes (<code>ALERT</code>), Confidence scores</td>
+                  <td>Network flow metrics (packet size, failed logins, session duration)</td>
+                </tr>
+                <tr>
+                  <td><strong>Agent 2: ANALYZE</strong><br><small style="color: var(--text-muted);">Threat
+                      Attribution</small></td>
+                  <td><span class="status-pill status-amber">Model-Based Reflex Agent</span></td>
+                  <td>Attribution accuracy, IoC extraction quality, Clarification response latency</td>
+                  <td>Alert envelopes from Agent 1 &amp; Enterprise asset inventory</td>
+                  <td><code>INTELLIGENCE_REQUEST</code> envelopes, Clarification responses</td>
+                  <td>Structured alerts and raw session feature representations</td>
+                </tr>
+                <tr>
+                  <td><strong>Agent 3: ENRICH</strong><br><small style="color: var(--text-muted);">Threat
+                      Intelligence</small></td>
+                  <td><span class="status-pill" style="color: #EC4899; background: rgba(236,72,153,0.12);">Goal-Based
+                      Retrieval Agent</span></td>
+                  <td>Retrieval Precision@K, STIX Graph consistency, CISA KEV match accuracy</td>
+                  <td>MITRE ATT&CK STIX 2.0 Graph &amp; CISA KEV catalog</td>
+                  <td><code>INTELLIGENCE_RESPONSE</code> dossiers, BFS graph pathways</td>
+                  <td>Attribution queries and IoCs from Agent 2</td>
+                </tr>
+                <tr>
+                  <td><strong>Agent 4: ASSESS+PLAN</strong><br><small style="color: var(--text-muted);">Risk &amp;
+                      Planning</small></td>
+                  <td><span class="status-pill status-emerald">Utility-Based Agent (A* Search)</span></td>
+                  <td>Operational risk accuracy, Cost-optimality ($c(p)=10.0$), Disruption minimization</td>
+                  <td>Consolidated multi-agent threat state</td>
+                  <td><code>FINAL_DECISION</code> mitigation plan, <code>CLARIFICATION_REQUEST</code></td>
+                  <td>Enriched threat dossiers from Agent 3</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h5 style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); margin: 14px 0 6px;">
+              Operational Environment Classification
+            </h5>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 0.74rem;">
+              <div class="agent-key-metric"><span>Partially Observable</span><strong class="highlight-cyan">Yes
+                  (Encrypted traffic)</strong></div>
+              <div class="agent-key-metric"><span>Stochastic</span><strong class="highlight-cyan">Yes (Unknown attacker
+                  paths)</strong></div>
+              <div class="agent-key-metric"><span>Sequential</span><strong class="highlight-cyan">Yes (State depends on
+                  steps)</strong></div>
+              <div class="agent-key-metric"><span>Dynamic</span><strong class="highlight-cyan">Yes (Attacks evolve in
+                  real-time)</strong></div>
+              <div class="agent-key-metric"><span>Continuous</span><strong class="highlight-cyan">Yes (Numerical
+                  latencies/packet size)</strong></div>
+              <div class="agent-key-metric"><span>Multi-Agent</span><strong class="highlight-cyan">Yes (Collaborative
+                  defense)</strong></div>
+            </div>
+          </div>
+
+          <!-- Pane 2: Algorithms & Proofs -->
+          <div class="dossier-pane" id="dossier-proofs">
+            <h4 style="font-size: 0.88rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 8px;">
+              Algorithmic Formulation: A* Cost-Optimal Search vs Uninformed BFS
+            </h4>
+            <p style="font-size: 0.76rem; color: var(--text-secondary); line-height: 1.5;">
+              In response planning, selecting mitigation actions solely based on shortest hop count (BFS) causes
+              catastrophic business downtime (e.g. prematurely powering down core infrastructure). Agent 4 utilizes
+              <strong>A* Search with an Admissible and Consistent Heuristic</strong>:
+            </p>
+
+            <div class="proof-box">
+              Evaluation Function: f(n) = g(n) + h(n)<br>
+              where g(n) = Cumulative Operational Cost along the current path,<br>
+              and h(n) = min(step_cost) * remaining_steps to goal state.<br><br>
+              Proof of Admissibility: Since h(n) is bounded by minimum edge weights (cost &ge; 1),<br>
+              &forall; n, h(n) &le; h*(n) &rArr; A* is provably optimal and never overestimates actual cost.
+            </div>
+
+            <table class="dossier-table">
+              <thead>
+                <tr>
+                  <th>Algorithm</th>
+                  <th>Search Strategy</th>
+                  <th>Heuristic</th>
+                  <th>Path Cost</th>
+                  <th>Nodes Explored</th>
+                  <th>Optimality Guarantee</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Breadth-First Search (BFS)</strong></td>
+                  <td>FIFO Queue (Uninformed)</td>
+                  <td>None (h(n) = 0)</td>
+                  <td><span class="highlight-amber">12.0</span></td>
+                  <td>8 nodes</td>
+                  <td>Sub-optimal (Minimizes hops, ignores cost)</td>
+                </tr>
+                <tr>
+                  <td><strong>Informed A* Search</strong></td>
+                  <td>Priority Queue (f(n) = g + h)</td>
+                  <td>Admissible &amp; Consistent</td>
+                  <td><span class="highlight-emerald">10.0 (Optimal)</span></td>
+                  <td>4 nodes (-50%)</td>
+                  <td>Provably Cost-Optimal (16.7% Cost Savings)</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h5 style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); margin: 16px 0 6px;">
+              Deterministic Multi-Factor Risk Formulation
+            </h5>
+            <div class="proof-box">
+              Risk = 0.25 &middot; Severity + 0.20 &middot; Asset + 0.20 &middot; Exploit + 0.15 &middot; Impact + 0.10
+              &middot; Exposure + 0.10 &middot; Confidence<br>
+              Bounded strictly in [0, 100] &bull; Replaces non-deterministic LLM hallucinations with verifiable
+              numerical scoring.
+            </div>
+          </div>
+
+          <!-- Pane 3: Faculty Viva Defense Q&A -->
+          <div class="dossier-pane" id="dossier-viva">
+            <h4 style="font-size: 0.88rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 12px;">
+              Faculty Defense &amp; Technical Viva Cheat-Sheet
+            </h4>
+
+            <div class="qa-card">
+              <div class="qa-question">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Q1: Why use a Multi-Agent System rather than a single fine-tuned Large Language Model (LLM)?
+              </div>
+              <div class="qa-answer">
+                <strong>Answer:</strong> Monolithic LLMs suffer from non-deterministic hallucinations, latency spikes
+                (>1000ms), and lack formal verifiability in life-critical SOC operations. Our system employs a
+                <em>Neuro-Symbolic Multi-Agent architecture</em>: fast statistical machine learning for reflex
+                perception (Agent 1), formal CIA symbolic logic (Agent 2), graph algorithms over STIX/KEV (Agent 3), and
+                provably optimal A* search (Agent 4). This guarantees sub-20ms latency and zero hallucination of
+                security directives.
+              </div>
+            </div>
+
+            <div class="qa-card">
+              <div class="qa-question">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Q2: How do your agents communicate, and is the architecture purely a sequential pipeline?
+              </div>
+              <div class="qa-answer">
+                <strong>Answer:</strong> The agents use a typed message-passing envelope protocol inspired by FIPA-ACL
+                (<code>ALERT</code>, <code>INTELLIGENCE_REQUEST</code>, <code>CLARIFICATION_REQUEST</code>,
+                <code>FINAL_DECISION</code>). It is <em>not</em> purely sequential: we implemented <strong>Smart Routing
+                  (Early Exit)</strong> which prunes downstream agents when traffic is benign (&ge;80% confidence,
+                saving 75% computational cost), and a <strong>Backward Clarification Loop</strong> where Agent 4 queries
+                Agent 2 when target asset context is missing.
+              </div>
+            </div>
+
+            <div class="qa-card">
+              <div class="qa-question">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Q3: Why is your A* heuristic admissible, and why does BFS fail in this context?
+              </div>
+              <div class="qa-answer">
+                <strong>Answer:</strong> An admissible heuristic must satisfy $h(n) \le h^*(n)$. In our Response Graph,
+                every mitigation transition incurs an operational cost $c \ge 1.0$. By defining $h(n) =
+                \min(\text{edge\_cost}) \cdot \text{remaining\_hops}$, $h(n)$ can never exceed the true cost. BFS is
+                blind to action costs; it treats dropping an IP the same as taking a critical core database offline
+                because both take 1 hop. A* minimizes cumulative operational impact.
+              </div>
+            </div>
+
+            <div class="qa-card">
+              <div class="qa-question">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                Q4: What dataset was used to evaluate Agent 1, and what are its known limitations?
+              </div>
+              <div class="qa-answer">
+                <strong>Answer:</strong> Agent 1 was trained on network flow telemetry reflecting the CIC-IDS2017
+                benchmark. On test evaluation, it achieved 88.63% accuracy and 100% precision (0 false positives on
+                1,055 benign trials). However, we maintain academic integrity by acknowledging dataset limitations:
+                synthetic lab traffic features cleaner boundaries than noisy real-world enterprise zero-days, which is
+                precisely why Agent 2 and Agent 3 provide symbolic and KEV validation.
+              </div>
+            </div>
+          </div>
+
+          <!-- Pane 4: Team Contributions & Roles -->
+          <div class="dossier-pane" id="dossier-team">
+            <h4 style="font-size: 0.88rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 8px;">
+              Individual Student Contributions &amp; Sub-System Ownership
+            </h4>
+            <p style="font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 12px;">
+              Course: 23CSE401 – Foundations of Artificial Intelligence &bull; B.Tech CSE Final Year
+            </p>
+
+            <table class="dossier-table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Roll Number</th>
+                  <th>Assigned Agent</th>
+                  <th>Core Implementation Artifacts</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Nanthakumaran</strong></td>
+                  <td><code>CB.SC.U4CSE23341</code></td>
+                  <td><strong>Agent 1: Intrusion Detection</strong></td>
+                  <td>Perception model, Random Forest training pipeline, Feature scaling, Confidence score computation,
+                    CIC-IDS2017 evaluation matrix.</td>
+                </tr>
+                <tr>
+                  <td><strong>Dhinesh chandra</strong></td>
+                  <td><code>CB.SC.U4CSE23310</code></td>
+                  <td><strong>Agent 2: Threat Analysis</strong></td>
+                  <td>Symbolic CIA Triad mapping rules, IoC extraction routines, STIX query synthesizer, Backward
+                    clarification message handler.</td>
+                </tr>
+                <tr>
+                  <td><strong>Vejju Sasi Kiran Yasaswi</strong></td>
+                  <td><code>CB.SC.U4CSE23356</code></td>
+                  <td><strong>Agent 3: Threat Intel &amp; Agent 4: Risk/Planning</strong></td>
+                  <td>MITRE ATT&CK STIX 2.0 graph engine, CISA KEV priority rules, Cost-Optimal A* Search algorithm,
+                    Multi-Factor Risk Model, Central Multi-Agent Orchestrator.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- SOC CONSOLE FOOTER -->
+    <footer class="soc-footer" role="contentinfo">
+      <div>
+        <strong>Course: 23CSE401 - Foundations of Artificial Intelligence</strong> &bull; Amrita Vishwa Vidyapeetham
+      </div>
+      <div>
+        Engineered by: <strong>Nanthakumaran</strong> &bull; <strong>Dhinesh chandra</strong> &bull; <strong>Vejju Sasi
+          Kiran Yasaswi</strong>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
