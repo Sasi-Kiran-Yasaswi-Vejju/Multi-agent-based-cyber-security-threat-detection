@@ -19,7 +19,19 @@ if hasattr(sys.stdout, "reconfigure"):
     except Exception:
         pass
 
+import webbrowser
+from dashboard.server import run_server
 from run_system import main
 
 if __name__ == "__main__":
-    main()
+    if "--ui" in sys.argv or "--dashboard" in sys.argv:
+        port = 8000
+        print(f"[*] Launching Multi-Agent SOC Dashboard at http://localhost:{port}/ ...")
+        try:
+            webbrowser.open(f"http://localhost:{port}/")
+        except Exception:
+            pass
+        run_server(port)
+    else:
+        main()
+
