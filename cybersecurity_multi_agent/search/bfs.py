@@ -6,9 +6,17 @@ Represents an uninformed (blind) search strategy used as an academic baseline.
 Explores the state space layer-by-layer using a FIFO queue.
 """
 
+import os
+import sys
 from collections import deque
 import time
 from typing import Optional, List, Tuple
+
+# Ensure base project directory is in sys.path for direct execution
+_BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _BASE_DIR not in sys.path:
+    sys.path.insert(0, _BASE_DIR)
+
 try:
     from search.response_graph import ResponseGraph
 except ImportError:
@@ -24,6 +32,7 @@ except ImportError:
         from ..communication.messages import SearchBenchmark
     except (ImportError, ValueError):
         from cybersecurity_multi_agent.communication.messages import SearchBenchmark
+
 
 
 def breadth_first_search(graph: ResponseGraph, start_state: Optional[str] = None) -> SearchBenchmark:

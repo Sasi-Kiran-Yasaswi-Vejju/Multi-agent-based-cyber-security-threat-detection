@@ -39,3 +39,10 @@ env/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Large raw PCAP capture dumps (>100MB, not used by core system)
+MachineLearningCVE/
+
+# Archives
+*.zip
+

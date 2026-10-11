@@ -98,3 +98,54 @@ class Agent2Response:
         """Deserializes JSON string into an Agent2Response instance."""
         data = json.loads(json_str)
         return cls(**data)
+
+
+class MessageType:
+    """Standard message types for inter-agent communication."""
+    ALERT = "ALERT"
+    ANALYSIS_REQUEST = "ANALYSIS_REQUEST"
+    ANALYSIS_RESPONSE = "ANALYSIS_RESPONSE"
+    INTELLIGENCE_REQUEST = "INTELLIGENCE_REQUEST"
+    INTELLIGENCE_RESPONSE = "INTELLIGENCE_RESPONSE"
+    RISK_REQUEST = "RISK_REQUEST"
+    CLARIFICATION_REQUEST = "CLARIFICATION_REQUEST"
+    CLARIFICATION_RESPONSE = "CLARIFICATION_RESPONSE"
+    FINAL_DECISION = "FINAL_DECISION"
+    ERROR = "ERROR"
+
+
+@dataclass
+class AgentMessage:
+    """
+    Generalized standard message envelope for multi-agent communication.
+    Guarantees strict decoupling across all four specialized agents.
+    """
+    message_type: str
+    sender: str
+    receiver: str
+    payload: Dict[str, Any] = field(default_factory=dict)
+    confidence: float = 1.0
+    priority: str = "MEDIUM"  # "LOW", "MEDIUM", "HIGH", "CRITICAL"
+    incident_id: str = "INC-001"
+    conversation_id: str = field(default_factory=lambda: f"CONV-{uuid.uuid4().hex[:8]}")
+    message_id: str = field(default_factory=lambda: f"MSG-{uuid.uuid4().hex[:8]}")
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+    def to_json(self) -> str:
+        """Serializes the message into an exchangeable JSON string."""
+        return json.dumps(asdict(self), indent=2)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Converts message into a Python dictionary."""
+        return asdict(self)
+
+    @classmethod
+    def from_json(cls, json_str: str) -> "AgentMessage":
+        """Deserializes a JSON string into an AgentMessage instance."""
+        data = json.loads(json_str)
+        return cls(**data)
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "AgentMessage":
+        """Constructs an AgentMessage from a dictionary."""
+        return cls(**data)

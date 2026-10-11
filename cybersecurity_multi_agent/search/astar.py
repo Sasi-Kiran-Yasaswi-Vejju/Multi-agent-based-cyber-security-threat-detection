@@ -7,9 +7,17 @@ Expands states using the evaluation function f(n) = g(n) + h(n),
 guaranteeing cost-optimal mitigation when h(n) is admissible.
 """
 
+import os
+import sys
 import heapq
 import time
 from typing import Optional, List, Tuple, Dict
+
+# Ensure base project directory is in sys.path for direct execution
+_BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _BASE_DIR not in sys.path:
+    sys.path.insert(0, _BASE_DIR)
+
 try:
     from search.response_graph import ResponseGraph
 except ImportError:
@@ -25,6 +33,7 @@ except ImportError:
         from ..communication.messages import SearchBenchmark
     except (ImportError, ValueError):
         from cybersecurity_multi_agent.communication.messages import SearchBenchmark
+
 
 
 def astar_search(graph: ResponseGraph, start_state: Optional[str] = None) -> SearchBenchmark:

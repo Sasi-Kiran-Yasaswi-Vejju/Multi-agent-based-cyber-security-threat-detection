@@ -43,6 +43,39 @@
         "Unencrypted protocol transmission (None/Plaintext)"
       ],
       "mitigation_target": "Enhanced auditing and secondary authentication challenge"
+    },
+    "Botnet": {
+      "category": "Command & Control",
+      "impacted_property": "Integrity",
+      "base_severity": 8,
+      "typical_indicators": [
+        "Periodic outbound beaconing rhythm",
+        "Communication with known malicious C2 IP",
+        "Suspicious background process socket connection"
+      ],
+      "mitigation_target": "Isolate host and sinkhole command and control communication"
+    },
+    "Web Attack": {
+      "category": "Application Exploit",
+      "impacted_property": "Confidentiality",
+      "base_severity": 8,
+      "typical_indicators": [
+        "SQL injection syntax detected in payload parameter",
+        "Cross-site scripting HTML tags in HTTP request",
+        "Directory traversal patterns observed"
+      ],
+      "mitigation_target": "Web Application Firewall block and input validation patch"
+    },
+    "Infiltration": {
+      "category": "Lateral Movement",
+      "impacted_property": "Confidentiality",
+      "base_severity": 9,
+      "typical_indicators": [
+        "Internal host-to-host privilege escalation",
+        "Lateral reconnaissance across internal subnet",
+        "Abnormal internal credential dumping"
+      ],
+      "mitigation_target": "Immediate host quarantine and enterprise credential reset"
     }
   },
   "severity_thresholds": [

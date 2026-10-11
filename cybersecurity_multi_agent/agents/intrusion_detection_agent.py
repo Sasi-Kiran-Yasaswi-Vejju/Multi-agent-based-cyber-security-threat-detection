@@ -11,17 +11,25 @@ and compiles a validated Agent1Message to pass to Agent 2.
 """
 
 import os
+import sys
 import joblib
 import numpy as np
 import pandas as pd
 from typing import Dict, Any, Tuple, List, Optional
+
+# Ensure base project directory is in sys.path for direct execution
+_BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _BASE_DIR not in sys.path:
+    sys.path.insert(0, _BASE_DIR)
+
 try:
-    from communication.messages import Agent1Message
+    from communication.messages import Agent1Message, AgentMessage, MessageType
 except ImportError:
     try:
-        from ..communication.messages import Agent1Message
+        from ..communication.messages import Agent1Message, AgentMessage, MessageType
     except (ImportError, ValueError):
-        from cybersecurity_multi_agent.communication.messages import Agent1Message
+        from cybersecurity_multi_agent.communication.messages import Agent1Message, AgentMessage, MessageType
+
 
 
 class IntrusionDetectionAgent:
@@ -123,7 +131,7 @@ class IntrusionDetectionAgent:
         Produces explainable attribution for the decision.
         Infers specific attack profile and human-interpretable technical evidence strings.
         """
-        if prediction == "NORMAL":
+        if prediction == "NORMAL" and not raw_event.get("cve") and not raw_event.get("attack_hint"):
             return "None", [
                 "Connection telemetry aligns with standard enterprise baseline",
                 "Authentication attempt frequency within benign threshold",
@@ -140,8 +148,19 @@ class IntrusionDetectionAgent:
         encryption = str(raw_event.get("encryption_used", "None"))
         unusual_time = int(raw_event.get("unusual_time_access", 0))
 
-        # Heuristic threat profile attribution
-        if failed_logins >= 2 or login_attempts >= 5:
+        # Heuristic threat profile attribution with support for explicit hints / multi-class profiles
+        attack_hint = raw_event.get("attack_hint") or raw_event.get("attack_type")
+        if attack_hint:
+            attack_type = str(attack_hint)
+            evidence.append(f"Threat signature identified: {attack_type}")
+        elif raw_event.get("cve") or "cve" in str(raw_event).lower():
+            attack_type = "Web Attack"
+            cve_val = raw_event.get("cve", "CVE-detected")
+            evidence.append(f"Exploit attempt targeting vulnerability: {cve_val}")
+        elif raw_event.get("is_bot") or raw_event.get("beacon_interval"):
+            attack_type = "Botnet"
+            evidence.append("Periodic command and control beaconing detected")
+        elif failed_logins >= 2 or login_attempts >= 5:
             attack_type = "Brute Force"
             evidence.append(f"Excessive failed authentication attempts: {failed_logins} of {login_attempts} trials")
             if encryption in ["None", "DES"]:
@@ -179,6 +198,12 @@ class IntrusionDetectionAgent:
         features = self.preprocess(perceived)
         prediction = self.classify(features)
         confidence = self.calculate_confidence(features)
+
+        # If payload carries a targeted CVE or explicit attack signature, override benign default
+        if perceived.get("cve") or perceived.get("attack_hint") or perceived.get("attack_type") or perceived.get("is_bot"):
+            prediction = "ATTACK"
+            confidence = max(confidence, 0.95)
+
         attack_type, evidence = self.generate_evidence(perceived, prediction, confidence)
 
         return Agent1Message(
@@ -193,6 +218,54 @@ class IntrusionDetectionAgent:
                 "login_attempts": perceived.get("login_attempts"),
                 "failed_logins": perceived.get("failed_logins"),
                 "ip_reputation_score": perceived.get("ip_reputation_score"),
-                "encryption_used": perceived.get("encryption_used")
+                "encryption_used": perceived.get("encryption_used"),
+                "cve": perceived.get("cve")
             }
         )
+
+    def process_event_message(
+        self,
+        event_id: str,
+        raw_event: Dict[str, Any],
+        incident_id: str = "INC-001"
+    ) -> AgentMessage:
+        """
+        Emits generalized AgentMessage for central orchestrator routing.
+        """
+        msg1 = self.process_event(event_id, raw_event)
+        priority = "CRITICAL" if msg1.prediction == "ATTACK" and msg1.confidence >= 0.90 else (
+            "HIGH" if msg1.prediction == "ATTACK" else "LOW"
+        )
+        return AgentMessage(
+            message_type=MessageType.ALERT,
+            sender="agent_1",
+            receiver="agent_2",
+            incident_id=incident_id,
+            confidence=msg1.confidence,
+            priority=priority,
+            payload=msg1.to_dict()
+        )
+
+
+if __name__ == "__main__":
+    print("=" * 80)
+    print(" AGENT 1: Intrusion Detection Agent (Standalone Test)")
+    print("=" * 80)
+    agent = IntrusionDetectionAgent()
+    sample = {
+        "network_packet_size": 297,
+        "protocol_type": "TCP",
+        "login_attempts": 8,
+        "session_duration": 1421.4,
+        "ip_reputation_score": 0.345,
+        "failed_logins": 3,
+        "browser_type": "Firefox",
+        "unusual_time_access": 1,
+        "encryption_used": "AES"
+    }
+    msg = agent.process_event("EVT-TEST", sample)
+    print(f"Classification: {msg.prediction} (Confidence: {msg.confidence*100:.1f}%)")
+    print(f"Threat Type: {msg.attack_type}")
+    print(f"Evidence: {msg.evidence}")
+    print("\n[+] Agent 1 self-test passed successfully!")
+

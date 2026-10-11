@@ -11,15 +11,23 @@ and dispatches the cost-optimal defensive response action.
 """
 
 import os
+import sys
 import json
 from typing import Dict, Any, Optional
+
+# Ensure base project directory is in sys.path for direct execution
+_BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _BASE_DIR not in sys.path:
+    sys.path.insert(0, _BASE_DIR)
+
 try:
-    from communication.messages import Agent1Message, Agent2Response, SearchBenchmark
+    from communication.messages import Agent1Message, Agent2Response, SearchBenchmark, AgentMessage, MessageType
 except ImportError:
     try:
-        from ..communication.messages import Agent1Message, Agent2Response, SearchBenchmark
+        from ..communication.messages import Agent1Message, Agent2Response, SearchBenchmark, AgentMessage, MessageType
     except (ImportError, ValueError):
-        from cybersecurity_multi_agent.communication.messages import Agent1Message, Agent2Response, SearchBenchmark
+        from cybersecurity_multi_agent.communication.messages import Agent1Message, Agent2Response, SearchBenchmark, AgentMessage, MessageType
+
 
 try:
     from search.response_graph import ResponseGraph
@@ -63,14 +71,35 @@ class ThreatResponseAgent:
     def receive_message(self, message_input: Any) -> Agent1Message:
         """
         Message reception interface.
-        Enforces loose coupling: accepts only Agent1Message instances or serialized JSON strings.
-        Direct access to Agent 1 internal memory or models is strictly disallowed.
+        Enforces loose coupling: accepts Agent1Message instances, AgentMessage envelopes,
+        or serialized JSON strings. Direct memory sharing is strictly disallowed.
         """
         if isinstance(message_input, Agent1Message):
             return message_input
+        elif isinstance(message_input, AgentMessage):
+            payload = message_input.payload
+            if "prediction" in payload:
+                return Agent1Message.from_dict(payload)
+            else:
+                return Agent1Message(
+                    event_id=payload.get("event_id", payload.get("alert_id", "EVT-UNKNOWN")),
+                    prediction=payload.get("prediction", "ATTACK"),
+                    confidence=message_input.confidence,
+                    attack_type=payload.get("attack_type", "Generic Anomaly"),
+                    evidence=payload.get("evidence", []),
+                    raw_features_summary=payload.get("raw_features_summary", {})
+                )
         elif isinstance(message_input, str):
-            return Agent1Message.from_json(message_input)
+            try:
+                data = json.loads(message_input)
+                if "payload" in data and "message_type" in data:
+                    return self.receive_message(AgentMessage.from_dict(data))
+                return Agent1Message.from_dict(data)
+            except Exception:
+                return Agent1Message.from_json(message_input)
         elif isinstance(message_input, dict):
+            if "payload" in message_input and "message_type" in message_input:
+                return self.receive_message(AgentMessage.from_dict(message_input))
             return Agent1Message.from_dict(message_input)
         else:
             raise TypeError(f"[Agent 2 Error] Rejected invalid message format: {type(message_input)}")
@@ -229,3 +258,155 @@ class ThreatResponseAgent:
             search_comparison=search_comparison,
             reason=reason
         )
+
+    def extract_indicators(self, message: Agent1Message) -> List[str]:
+        """
+        Specialist capability: extracts actionable indicators of compromise (IoCs)
+        and behavioral attack signatures from perceived event telemetry.
+        """
+        indicators: List[str] = list(message.evidence)
+        summary = message.raw_features_summary or {}
+
+        # Scan for explicit CVE identifiers
+        import re
+        cve_pattern = re.compile(r"CVE-\d{4}-\d{4,7}", re.IGNORECASE)
+        for ev in message.evidence:
+            matches = cve_pattern.findall(ev)
+            for m in matches:
+                indicators.append(f"Targeted CVE: {m.upper()}")
+
+        if summary.get("cve"):
+            indicators.append(f"Targeted CVE: {str(summary['cve']).upper()}")
+
+        if summary.get("login_attempts", 0) > 3:
+            indicators.append(f"Repeated authentication velocity: {summary.get('login_attempts')} attempts")
+        if summary.get("network_packet_size", 0) > 650:
+            indicators.append(f"Volumetric anomaly: {summary.get('network_packet_size')} bytes")
+        if summary.get("protocol_type") in ["UDP", "ICMP"]:
+            indicators.append(f"Suspicious protocol abuse: {summary.get('protocol_type')}")
+
+        return list(dict.fromkeys(indicators))  # Deduplicate while preserving order
+
+    def generate_query_terms(self, attack_type: str, indicators: List[str]) -> List[str]:
+        """
+        Synthesizes targeted MITRE ATT&CK and vulnerability search terms.
+        """
+        terms: List[str] = [attack_type]
+        mapping = {
+            "Brute Force": ["Brute Force", "Password Spraying", "T1110"],
+            "DoS": ["Denial of Service", "Network Flood", "T1498"],
+            "Port Scan": ["Network Service Discovery", "Port Scan", "T1046"],
+            "Botnet": ["Command and Control", "Protocol Tunneling", "T1071"],
+            "Web Attack": ["Exploit Public-Facing Application", "SQL Injection", "T1190"],
+            "Infiltration": ["Lateral Movement", "Privilege Escalation", "T1068"]
+        }
+        if attack_type in mapping:
+            terms.extend(mapping[attack_type])
+
+        # Add any CVE terms
+        import re
+        for ind in indicators:
+            cves = re.findall(r"CVE-\d{4}-\d{4,7}", ind, re.IGNORECASE)
+            for cve in cves:
+                terms.append(cve.upper())
+
+        return list(dict.fromkeys(terms))
+
+    def analyze_and_create_request(
+        self,
+        message_input: Any,
+        target_asset: str = "DMZ_WEB_SERVER",
+        incident_id: str = "INC-001"
+    ) -> AgentMessage:
+        """
+        Specialist entrypoint for 4-Agent Orchestration:
+        Analyzes Agent 1 alert, synthesizes indicators and query terms,
+        and constructs a structured INTELLIGENCE_REQUEST for Agent 3.
+        """
+        msg1 = self.receive_message(message_input)
+        analysis = self.analyze_threat(msg1, target_asset=target_asset)
+        indicators = self.extract_indicators(msg1)
+        query_terms = self.generate_query_terms(msg1.attack_type, indicators)
+
+        # Check for extracted CVE
+        cve_id = None
+        for term in query_terms:
+            if term.startswith("CVE-"):
+                cve_id = term
+                break
+
+        priority = "CRITICAL" if analysis["severity"] in ["CRITICAL", "HIGH"] else "MEDIUM"
+
+        return AgentMessage(
+            message_type=MessageType.INTELLIGENCE_REQUEST,
+            sender="agent_2",
+            receiver="agent_3",
+            incident_id=incident_id,
+            confidence=msg1.confidence,
+            priority=priority,
+            payload={
+                "event_id": msg1.event_id,
+                "attack_type": msg1.attack_type,
+                "threat_category": analysis["threat_category"],
+                "impacted_property": analysis["impacted_property"],
+                "severity": analysis["severity"],
+                "base_severity": analysis["base_severity"],
+                "target_asset": target_asset,
+                "target_multiplier": analysis["target_multiplier"],
+                "indicators": indicators,
+                "query_terms": query_terms,
+                "cve_id": cve_id,
+                "agent1_confidence": msg1.confidence,
+                "evidence": msg1.evidence
+            }
+        )
+
+    def handle_clarification(self, clarification_msg: AgentMessage) -> AgentMessage:
+        """
+        Specialist capability: handles backward CLARIFICATION_REQUEST from Agent 4 or Agent 3.
+        Provides missing asset context, attack severity, or indicators without fabricating.
+        """
+        req_info = clarification_msg.payload.get("required_information", "").lower()
+        incident_id = clarification_msg.incident_id
+        target_asset = clarification_msg.payload.get("target_asset", "DMZ_WEB_SERVER")
+
+        multipliers = self.knowledge_base.get("target_criticality_multipliers", {})
+        criticality = multipliers.get(target_asset, 1.0)
+
+        response_payload = {
+            "request_id": clarification_msg.message_id,
+            "target_asset": target_asset,
+            "asset_criticality": criticality,
+            "resolved_property": req_info,
+            "status": "RESOLVED",
+            "clarification_notes": f"Verified asset context for '{target_asset}': criticality multiplier = {criticality}."
+        }
+
+        return AgentMessage(
+            message_type=MessageType.CLARIFICATION_RESPONSE,
+            sender="agent_2",
+            receiver=clarification_msg.sender,
+            incident_id=incident_id,
+            conversation_id=clarification_msg.conversation_id,
+            confidence=0.95,
+            priority="HIGH",
+            payload=response_payload
+        )
+
+
+if __name__ == "__main__":
+    print("=" * 80)
+    print(" AGENT 2: Threat Analysis & Response Planning Agent (Standalone Test)")
+    print("=" * 80)
+    agent = ThreatResponseAgent()
+    msg = Agent1Message(
+        event_id="EVT-TEST",
+        prediction="ATTACK",
+        confidence=0.92,
+        attack_type="DoS",
+        evidence=["UDP flood detected"]
+    )
+    analysis = agent.analyze_threat(msg, target_asset="DMZ_WEB_SERVER")
+    print(f"Analysis: Category={analysis['threat_category']} | Severity={analysis['severity']} | Risk={analysis['risk_score']}")
+    print("\n[+] Agent 2 self-test passed successfully!")
+

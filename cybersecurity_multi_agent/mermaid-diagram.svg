@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2222.7118333333333 888.4169999999999" width="2222.7118333333333" height="888.4169999999999" style="--bg:#1F1F1F;--fg:#CCCCCC;--line:#CCCCCC;--accent:#0078D4;--muted:#CCCCCCCC;--surface:#181818;--border:#CCCCCC;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="arrowhead" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+  <marker id="arrowhead-start" markerWidth="8" markerHeight="5" refX="1" refY="2.5" orient="auto-start-reverse">
+    <polygon points="8 0, 0 2.5, 8 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+</defs>
+<g class="subgraph" data-id="MultiAgentPipeline" data-label="Specialized Multi-Agent Cooperative Pipeline">
+  <rect x="943.196416666667" y="118" width="1239.5154166666664" height="377.417" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="943.196416666667" y="118" width="1239.5154166666664" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="955.196416666667" y="132" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Specialized Multi-Agent Cooperative Pipeline</text>
+</g>
+<polyline class="edge" data-from="EVT" data-to="ORCH" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1300.1890000000003,654.617 1300.1890000000003,666.617 934.2515952380953,666.617 934.2515952380953,726.617" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="ORCH" data-to="REP" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="896.8191666666668,763.5169999999999 896.8191666666668,811.5169999999999" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="ORCH" data-to="A1" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="1. Ingest Event" points="784.521880952381,726.617 784.521880952381,714.617 77,714.617 77,40 2043.4788333333336,40 2043.4788333333336,181.90566666666666" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="A1" data-to="ORCH" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="2. Alert: Pred, Conf, Evidence" points="2043.4788333333333,252.60566666666665 2043.4788333333333,670.317 2077.0543333333335,670.317 2077.0543333333335,714.617 1009.1164523809523,714.617 1009.1164523809523,726.617" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="ORCH" data-to="DEC1" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Check: Is it Malicious / Low Confidence?" points="803.2380952380953,726.617 803.2380952380953,702.617 223.30200000000008,702.617 223.30200000000008,52 1827.0373333333337,52 1827.0373333333337,181.9056666666669" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="A2" data-to="ORCH" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="3. Analysis &amp; Intelligence Request" points="1360.0856666666668,479.417 1360.0856666666668,537.4169999999999 1405.2640000000001,537.4169999999999 1405.2640000000001,678.617 952.9678095238095,678.617 952.9678095238095,726.617" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="ORCH" data-to="A3" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="4. Forward Query" points="821.9543095238096,726.617 821.9543095238096,690.617 379.2800000000001,690.617 379.2800000000001,64 1575.3983333333335,64 1575.3983333333335,181.90566666666666" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="A3" data-to="ORCH" data-style="dotted" data-arrow-start="false" data-arrow-end="true" data-label="Clarification Request if Low Confidence" points="1522.588166666667,269.5056666666667 1522.588166666667,646.317 1595.042,646.317 1595.042,690.617 971.6840238095238,690.617 971.6840238095238,726.617" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="ORCH" data-to="A2" data-style="dotted" data-arrow-start="false" data-arrow-end="true" data-label="Request More Indicators" points="840.6705238095238,726.617 840.6705238095238,678.617 500.5900000000001,678.617 500.5900000000001,76 1360.0856666666668,76 1360.0856666666668,408.717" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="A3" data-to="ORCH" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="5. Enriched Intelligence: Techniques, Tactics, CVEs" points="1628.2085000000002,269.5056666666667 1628.2085000000002,646.317 1827.768,646.317 1827.768,702.617 990.400238095238,702.617 990.400238095238,726.617" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="ORCH" data-to="A4" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="6. Forward Complete Dossier" points="859.3867380952382,726.617 859.3867380952382,666.617 648.07,666.617 648.07,88 1116.515416666667,88 1116.515416666667,181.90566666666666" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="A4" data-to="ORCH" data-style="dotted" data-arrow-start="false" data-arrow-end="true" data-label="Backward Request: Unknown Asset Criticality?" points="1064.0757500000002,252.60566666666665 1064.0757500000002,598.317 960.3720000000001,598.317 960.3720000000001,642.617 896.8191666666667,642.617 896.8191666666667,726.617" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="ORCH" data-to="A2" data-style="dotted" data-arrow-start="false" data-arrow-end="true" data-label="Query Asset Profile" points="878.1029523809525,726.617 878.1029523809525,654.617 783.7460000000001,654.617 783.7460000000001,100 1283.834416666667,100 1283.834416666667,408.717" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="A4" data-to="ORCH" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="7. Final Assessment &amp; Optimal Mitigation Plan" points="1168.9550833333335,252.60566666666665 1168.9550833333335,537.4169999999999 1194.114,537.4169999999999 1194.114,654.617 915.5353809523809,654.617 915.5353809523809,726.617" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="DEC1" data-to="CLOSE" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="No: Benign &amp; Conf &gt;= 0.90" points="1848.7735000000002,290.58649999999983 1848.7735000000002,408.717" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="DEC1" data-to="A2" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Yes: Attack or Low Conf" points="1805.3011666666669,203.64183333333324 1805.3011666666669,304.417 1444.6455416666668,304.417 1444.6455416666668,372.717 1436.3369166666669,372.717 1436.3369166666669,408.717" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<g class="edge-label" data-from="ORCH" data-to="A1" data-label="1. Ingest Event">
+  <rect x="36" y="677.317" width="81.80200000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="76.90100000000001" y="692.467" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">1. Ingest Event</text>
+</g>
+<g class="edge-label" data-from="A1" data-to="ORCH" data-label="2. Alert: Pred, Conf, Evidence">
+  <rect x="2000.0543333333337" y="677.317" width="153.08200000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="2076.5953333333337" y="692.467" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">2. Alert: Pred, Conf, Evidence</text>
+</g>
+<g class="edge-label" data-from="ORCH" data-to="DEC1" data-label="Check: Is it Malicious / Low Confidence?">
+  <rect x="121.80200000000008" y="665.317" width="202.978" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="223.29100000000008" y="680.467" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Check: Is it Malicious / Low Confidence?</text>
+</g>
+<g class="edge-label" data-from="A2" data-to="ORCH" data-label="3. Analysis &amp; Intelligence Request">
+  <rect x="1318.2640000000001" y="544.4169999999999" width="173.27800000000005" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1404.9030000000002" y="559.5669999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">3. Analysis &amp; Intelligence Request</text>
+</g>
+<g class="edge-label" data-from="ORCH" data-to="A3" data-label="4. Forward Query">
+  <rect x="328.7800000000001" y="653.317" width="100.81000000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="379.1850000000001" y="668.467" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">4. Forward Query</text>
+</g>
+<g class="edge-label" data-from="A3" data-to="ORCH" data-label="Clarification Request if Low Confidence">
+  <rect x="1495.542" y="653.317" width="198.22599999999997" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1594.655" y="668.467" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Clarification Request if Low Confidence</text>
+</g>
+<g class="edge-label" data-from="ORCH" data-to="A2" data-label="Request More Indicators">
+  <rect x="433.5900000000001" y="641.317" width="133.48000000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="500.3300000000001" y="656.467" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Request More Indicators</text>
+</g>
+<g class="edge-label" data-from="A3" data-to="ORCH" data-label="5. Enriched Intelligence: Techniques, Tactics, CVEs">
+  <rect x="1697.768" y="665.317" width="259.408" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1827.472" y="680.467" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">5. Enriched Intelligence: Techniques, Tactics, CVEs</text>
+</g>
+<g class="edge-label" data-from="ORCH" data-to="A4" data-label="6. Forward Complete Dossier">
+  <rect x="571.0700000000002" y="629.317" width="153.67600000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="647.9080000000001" y="644.467" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">6. Forward Complete Dossier</text>
+</g>
+<g class="edge-label" data-from="A4" data-to="ORCH" data-label="Backward Request: Unknown Asset Criticality?">
+  <rect x="841.8720000000001" y="605.317" width="236.24199999999996" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="959.993" y="620.467" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Backward Request: Unknown Asset Criticality?</text>
+</g>
+<g class="edge-label" data-from="ORCH" data-to="A2" data-label="Query Asset Profile">
+  <rect x="728.7460000000001" y="617.317" width="109.12600000000003" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="783.3090000000001" y="632.467" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Query Asset Profile</text>
+</g>
+<g class="edge-label" data-from="A4" data-to="ORCH" data-label="7. Final Assessment &amp; Optimal Mitigation Plan">
+  <rect x="1082.114" y="544.4169999999999" width="223.76799999999994" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1193.998" y="559.5669999999999" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">7. Final Assessment &amp; Optimal Mitigation Plan</text>
+</g>
+<g class="edge-label" data-from="DEC1" data-to="CLOSE" data-label="No: Benign &amp; Conf &gt;= 0.90">
+  <rect x="1781.2735" y="335.41700000000003" width="134.668" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1848.6075" y="350.567" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">No: Benign &amp; Conf &gt;= 0.90</text>
+</g>
+<g class="edge-label" data-from="DEC1" data-to="A2" data-label="Yes: Attack or Low Conf">
+  <rect x="1380.1455416666668" y="335.41700000000003" width="128.13400000000001" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1444.2125416666668" y="350.567" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Yes: Attack or Low Conf</text>
+</g>
+<g class="node" data-id="EVT" data-label="Security Event Telemetry" data-shape="rectangle">
+  <rect x="1205.114" y="617.717" width="190.14999999999998" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1300.189" y="636.167" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Security Event Telemetry</text>
+</g>
+<g class="node" data-id="ORCH" data-label="Central Orchestrator &amp; State Manager" data-shape="rectangle">
+  <rect x="765.8056666666668" y="726.617" width="262.027" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="896.8191666666668" y="745.067" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Central Orchestrator &amp; State Manager</text>
+</g>
+<g class="node" data-id="REP" data-label="Final Incident Dossier &amp; Communication Trace" data-shape="rectangle">
+  <rect x="742.8346666666667" y="811.5169999999999" width="307.96899999999994" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="896.8191666666667" y="829.967" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Final Incident Dossier &amp; Communication Trace</text>
+</g>
+<g class="node" data-id="A1" data-label="Agent 1: Network Intrusion Detection
+Role: DETECT
+ML: Random Forest / CIC-IDS2017" data-shape="rectangle">
+  <rect x="1920.2458333333334" y="181.90566666666666" width="246.46599999999995" height="70.7" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="2043.4788333333333" y="217.25566666666666" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="2043.4788333333333" dy="-12.350000000000001">Agent 1: Network Intrusion Detection</tspan><tspan x="2043.4788333333333" dy="16.900000000000002">Role: DETECT</tspan><tspan x="2043.4788333333333" dy="16.900000000000002">ML: Random Forest / CIC-IDS2017</tspan></text>
+</g>
+<g class="node" data-id="DEC1" data-label="Malicious?" data-shape="diamond">
+  <polygon points="1827.0373333333334,181.90566666666666 1892.2458333333334,247.11416666666665 1827.0373333333334,312.32266666666663 1761.8288333333335,247.11416666666665" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1827.0373333333334" y="247.11416666666665" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">Malicious?</text>
+</g>
+<g class="node" data-id="CLOSE" data-label="Stop Investigation &amp; Log Benign
+Unnecessary Calls Saved: 3" data-shape="rectangle">
+  <rect x="1736.6555000000003" y="408.717" width="224.236" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1848.7735000000002" y="435.61699999999996" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1848.7735000000002" dy="-3.9000000000000012">Stop Investigation &amp; Log Benign</tspan><tspan x="1848.7735000000002" dy="16.900000000000002">Unnecessary Calls Saved: 3</tspan></text>
+</g>
+<g class="node" data-id="A2" data-label="Agent 2: Threat Analysis Specialist
+Role: ANALYZE
+Indicators, Attack Signatures, Disagreements" data-shape="rectangle">
+  <rect x="1207.5831666666668" y="408.717" width="305.00499999999994" height="70.7" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1360.0856666666668" y="444.067" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1360.0856666666668" dy="-12.350000000000001">Agent 2: Threat Analysis Specialist</tspan><tspan x="1360.0856666666668" dy="16.900000000000002">Role: ANALYZE</tspan><tspan x="1360.0856666666668" dy="16.900000000000002">Indicators, Attack Signatures, Disagreements</tspan></text>
+</g>
+<g class="node" data-id="A3" data-label="Agent 3: Threat Intelligence Specialist
+Role: ENRICH
+Knowledge: MITRE ATT&amp;CK Graph + CISA KEV
+Search: Keyword + Semantic + BFS" data-shape="rectangle">
+  <rect x="1416.9678333333336" y="181.90566666666666" width="316.861" height="87.60000000000001" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1575.3983333333335" y="225.70566666666667" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1575.3983333333335" dy="-20.8">Agent 3: Threat Intelligence Specialist</tspan><tspan x="1575.3983333333335" dy="16.900000000000002">Role: ENRICH</tspan><tspan x="1575.3983333333335" dy="16.900000000000002">Knowledge: MITRE ATT&amp;CK Graph + CISA KEV</tspan><tspan x="1575.3983333333335" dy="16.900000000000002">Search: Keyword + Semantic + BFS</tspan></text>
+</g>
+<g class="node" data-id="A4" data-label="Agent 4: Risk Assessment &amp; Response Planner
+Role: ASSESS + PLAN
+Deterministic Risk Formula + A* Search" data-shape="rectangle">
+  <rect x="959.196416666667" y="181.90566666666666" width="314.638" height="70.7" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1116.515416666667" y="217.25566666666666" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1116.515416666667" dy="-12.350000000000001">Agent 4: Risk Assessment &amp; Response Planner</tspan><tspan x="1116.515416666667" dy="16.900000000000002">Role: ASSESS + PLAN</tspan><tspan x="1116.515416666667" dy="16.900000000000002">Deterministic Risk Formula + A* Search</tspan></text>
+</g>
+</svg>
